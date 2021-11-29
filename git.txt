@@ -1,3 +1,6 @@
+	
+
+
 
 (still had to create repo from github.com)
 --not sure about this' git remote add origin git@github.com:MikeVaccaro/newone.git
@@ -5,17 +8,16 @@ git branch -M master
 git push -u origin master
  
 
-create a repo on website if it doesn’t already exisit
-create a local directory to pull to
+Pull down a repo
+	create a repo on website if it doesn’t already exisit
+	create a local directory to pull to
+	git init (inside that directory)
+	git pull git@github.com:MikeVaccaro/NOTES.git
 
-git init (inside that directory)
-git pull git@github.com:MikeVaccaro/newone.git
-git remote add origin git@github.com:MikeVaccaro/newone.git
-
-now you got all the fills
-you can change the files and do a
-git add .
-git commit
-
-git push origin master 
+now you got all the files
+you can change the files back by doing the following
+	git remote add origin git@github.com:MikeVaccaro/newone.git
+	git add .
+	git commit
+	git push origin master 
 
