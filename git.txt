@@ -15,7 +15,7 @@ Pull down a repo
 	git pull git@github.com:MikeVaccaro/NOTES.git
 
 now you got all the files
-you can change the files back by doing the following
+you can change the files copy them back by doing the following
 	git remote add origin git@github.com:MikeVaccaro/newone.git
 	git add .
 	git commit
