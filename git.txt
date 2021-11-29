@@ -6,24 +6,26 @@ git push -u origin master
 
 
 
-#Check if git is installed
+Check if git is installed
 	which git
-#Install git
+Install git
 	sudo apt update
 	sudo apt install git
-#Create user config for git
+Create user config for git
 	git config --global user.name "First Last"
 	git config --global user.name "Mikee Vaccaro"
 	git config --global user.email "somebody@somewhere.net"
 	git config --global user.email "michael.r.vaccaro@gmail.com"
-#Check the status of your git repository
+Check the status of your git repository
 	git status
-#Stage the README.md file (after making changes) to be included in the next git commit
+Stage the README.md file (after making changes) to be included in the next git commit
 	git add README.md
-#Set up the README.md file to be included in a commit
+Set up the README.md file to be included in a commit
 	git commit -m "Updated readme file, initial commit"
-#Send the commit to Github
+Send the commit to Github
 	git push origin master
+which remote repository is affiliated with the local one?
+	git remote -v
 
 
 Initital Setup
