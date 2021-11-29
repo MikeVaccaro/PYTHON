@@ -1,6 +1,4 @@
 
-
-
 (still had to create repo from github.com)
 --not sure about this' git remote add origin git@github.com:MikeVaccaro/newone.git
 git branch -M master
