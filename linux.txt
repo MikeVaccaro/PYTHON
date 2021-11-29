@@ -1,0 +1,39 @@
+
+#####################SSH SSH SSH
+
+ssh-keygen -t ed25519 -C "jay default"
+ssh-keygen -C "made for github.com from awx box"
+ssh-keygen -t ed25519 -C "ansible"
+ 
+ssh-copy-id -i ~/.ssh/id_ed25519.pub <IP Adderss>
+ssh-copy-id -i ~/.ssh/id_rsa.pub root@es1
+ssh-copy-id -i ~/.ssh/id_rsa.pub root@awx
+ssh-copy-id -i ~/.ssh/ansible.pub awx
+ 
+ssh -i ~/.ssh/<key_name> <IP Address>
+ssh -i ~/.ssh/foo awx
+ 
+#To cache the passphrase for our session, we can use the ssh agent
+eval $(ssh-agent)
+ ssh-add
+ 
+#Here's an alias you can put in your .bashrc, to simplify it
+alias ssha='eval $(ssh-agent) && ssh-add':
+
+#####################SSH SSH SSH
+
+
+
+
+cat /etc/os-release
+
+
+
+netstat -tulpen
+#whos listening on what port
+
+iptables -L
+iptables -L -n
+#I think these indicate firewall ports open/close etc
+
+
