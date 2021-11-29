@@ -1,11 +1,39 @@
-	
-
-
 
 (still had to create repo from github.com)
 --not sure about this' git remote add origin git@github.com:MikeVaccaro/newone.git
 git branch -M master
 git push -u origin master
+
+
+
+#Check if git is installed
+	which git
+#Install git
+	sudo apt update
+	sudo apt install git
+#Create user config for git
+	git config --global user.name "First Last"
+	git config --global user.name "Mikee Vaccaro"
+	git config --global user.email "somebody@somewhere.net"
+	git config --global user.email "michael.r.vaccaro@gmail.com"
+#Check the status of your git repository
+	git status
+#Stage the README.md file (after making changes) to be included in the next git commit
+	git add README.md
+#Set up the README.md file to be included in a commit
+	git commit -m "Updated readme file, initial commit"
+#Send the commit to Github
+	git push origin master
+
+
+Initital Setup
+	go to home dir and create .ssh
+	run this ssh-keygen -t rsa -C "michael.r.vaccaro@gmail.com"
+	this iwll put id_rsa and id_rsa.pub to that .ssh dir
+	take the .pub file and copy over th SSH Keys in github settings page
+	test it like this
+		ssh -T git@github.com
+	(I suspect the above defaults to a key named "id_rsa" in the .ssh dir)
  
 
 Pull down a repo
