@@ -1,0 +1,8 @@
+ls -d $PWD/*
+
+loops
+while loop
+	x=1; while [ $x -le 5 ]; do  echo "welcome $x times";sleep 1; x=$(( $x + 1 )); done
+	while [ 1 -eq 1 ]; do echo "this";sleep 3; done
+for loop	
+	for this in  `cat thesetopics` ; do echo $this; done

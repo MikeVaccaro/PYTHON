@@ -1,0 +1,49 @@
+get broker names
+	kafka-broker-api-versions --bootstrap-server $KBK|grep id
+		lin2dv2kf1b8.chrobinson.com:9092 (id: 1001 rack: 2) -> (
+		lin2dv2kf1b13.chrobinson.com:9092 (id: 1006 rack: 2) -> (
+		lin2dv2kf1b11.chrobinson.com:9092 (id: 1004 rack: 2) -> (
+		lin2dv2kf1b14.chrobinson.com:9092 (id: 1007 rack: 2) -> (
+		lin2dv2kf1b9.chrobinson.com:9092 (id: 1002 rack: 2) -> (
+		lin2dv2kf1b10.chrobinson.com:9092 (id: 1003 rack: 2) -> (
+		lin2dv2kf1b12.chrobinson.com:9092 (id: 1005 rack: 2) -> (
+		lin2dv2kf1b16.chrobinson.com:9092 (id: 22955 rack: 2) -> (
+
+kafka-broker-api-versions --bootstrap-server $KBK --version
+
+
+
+
+ls -ltdr /data?/*future
+
+kafka-reassign-partitions --zookeeper $KZK --reassignment-json-file proposal.new.json --bootstrap-server $KBK  --command-config /data/tools/kafka/clients/AZ_PROD__SASL_PLAINTEXT-9092__SASLMECHANISM-SH256__admin.conf    --verify 
+kafka-reassign-partitions --zookeeper $KZK --reassignment-json-file proposal.new.json --bootstrap-server $KBK  --command-config /data/tools/kafka/clients/AZ_PROD__SASL_PLAINTEXT-9092__SASLMECHANISM-SH256__admin.conf   --replica-alter-log-dirs-throttle 20485760  --execute
+
+
+kafka-reassign-partitions-secure --zookeeper $KZK --reassignment-json-file proposal.new.json --bootstrap-server $KBK  --verify  --command-config /data/tools/kafka/clients/OP_PROD__SASL_PLAINTEXT-9093__SASLMECHANISM-SH256__kafkaadmin.conf
+
+ls -ltdr /data?/*future
+
+kafka-configs --zookeeper $KZK:2181  --alter --add-config 'SCRAM-SHA-256=[iterations=8192,password=mikepass],SCRAM-SHA-512=[password=mikepass]' --entity-type users --entity-name mikeuser
+
+ kafka-reassign-partitions-secure --zookeeper $KZK --reassignment-json-file current.jq --bootstrap-server kafkaprcl01b1.chrobinson.com:9093  --command-config /data/tools/kafka/clients/ONPREM_PROD__SASL_PLAINTEXT-9093__SASLMECHANISM-SH256__kafkaadmin.conf --execute
+
+{
+  "version": 1,
+  "partitions": [
+    {
+      "topic": "mikev",
+      "partition": 1,
+      "replicas": [
+        1,
+        2
+      ],
+      "log_dirs": [
+        "any",
+        "any"
+      ]
+    }
+  ]
+}
+
+
