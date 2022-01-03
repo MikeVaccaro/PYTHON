@@ -19,6 +19,8 @@ ls -ltdr /data?/*future
 kafka-reassign-partitions --zookeeper $KZK --reassignment-json-file proposal.new.json --bootstrap-server $KBK  --command-config /data/tools/kafka/clients/AZ_PROD__SASL_PLAINTEXT-9092__SASLMECHANISM-SH256__admin.conf    --verify 
 kafka-reassign-partitions --zookeeper $KZK --reassignment-json-file proposal.new.json --bootstrap-server $KBK  --command-config /data/tools/kafka/clients/AZ_PROD__SASL_PLAINTEXT-9092__SASLMECHANISM-SH256__admin.conf   --replica-alter-log-dirs-throttle 20485760  --execute
 
+kafka-reassign-partitions-secure --zookeeper $KZK --reassignment-json-file proposal.new.json --bootstrap-server $KBK  --command-config /data/tools/kafka/clients/OP_DEV__SASL_PLAINTEXT-9093__SASLMECHANISM-SH256__kafkaadmin.conf   --replica-alter-log-dirs-throttle 1000000  --execute
+kafka-reassign-partitions-secure --zookeeper $KZK --reassignment-json-file proposal.new.json --bootstrap-server $KBK  --command-config /data/tools/kafka/clients/OP_DEV__SASL_PLAINTEXT-9093__SASLMECHANISM-SH256__kafkaadmin.conf    --verify
 
 kafka-reassign-partitions-secure --zookeeper $KZK --reassignment-json-file proposal.new.json --bootstrap-server $KBK  --verify  --command-config /data/tools/kafka/clients/OP_PROD__SASL_PLAINTEXT-9093__SASLMECHANISM-SH256__kafkaadmin.conf
 
