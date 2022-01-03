@@ -44,6 +44,10 @@ Pull down a repo
 	git init (inside that directory)
 	git pull git@github.com:MikeVaccaro/NOTES.git
 
+After you come back to a tracked repo start off but doing this AGAIN to make sure you are all up to date from the hub
+	git pull git@github.com:MikeVaccaro/NOTES.git
+
+
 now you got all the files
 you can change the files copy them back by doing the following
 <<<<<<< HEAD
