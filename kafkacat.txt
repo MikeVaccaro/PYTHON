@@ -1,11 +1,46 @@
 
 #CONSUME GET ALL FIELDS
+USERNAME=ds-k8s-logging-user
+USERNAME=filebeat-k8s-ece
+USERNAME=admin
 PASSWORD=TArsy8XrhefW3WV8
-USERNAME=dds-repl-dev
+PASSWORD=asdlkfjeoijEE1234!
+PASSWORD=ThisIsTheWay
 SECCLAUSE="-X security.protocol=SASL_PLAINTEXT -X sasl.mechanisms=SCRAM-SHA-256 -X sasl.username=$USERNAME -X sasl.password=$PASSWORD"
 RUNCOMMAND="sudo docker run -it --rm edenhill/kafkacat:1.6.0 -b $KBK"
 FORMAT="-f 'Topic %t Partition [%p] at Offset %o: Timesestamp is: %T Payload size is %S  Key is %k   Message is: %s\n' "
 RUNCOMMAND=$RUNCOMMAND" "$SECCLAUSE 
+
+
+
+
+Options
+
+-h              (print help)
+
+-X list         (List available librdkafka configuration properties)
+-X dump         (Dump configuration and exit.)
+
+-L -t test1     ( Metadata List [apparently only for a topic??]
+
+BASIC CONSUMER EXAMPLES
+-C -t test1 -p 0        (consume the topic DEFAULT offset IS BEGINNING only this partition default output is MESSSAGE)
+-C -t test1 -p 0 -o beginning
+-C -t test1 -p 0 -o end
+-C -t test1 -p 0 -o 123  (TRY to start reading from here.  If I am lower then any OFST then start beginning if higher start end)
+-C -t test1 -p 0 -o -3   (start from the third from te end)
+-C -t test1 -p 0 -o s@1639151210069 -o e@1639151212799   (start at this TS inclusive, end at that TS exclusive)
+
+CONSUMER WITH FORMAT EXAMPLES
+-C -t test1 -p 0 -f 'Topic: %t Partition: %p at Offset: %o: TS: %T, Payload size: %S  Key: %k   Message: %s\n'    (add some format)
+-C -t test1 -p 0 -J     (not really a format example but gives EVERYTHING and in a JSON format, even BROKER and HEADERS!)
+-C -t test1 -p 0 -J -e  (exit when done)
+
+add scchma reg/avro capability
+
+  -X schema.registry.prop=val Set libserdes configuration property for the Avro/Schema-Registry client.
+
+
 
 
 
@@ -21,14 +56,7 @@ always
 #QUERY a certain T:P:TS and return its offset
 -Q -t mikev2:0:1623957181214
 -Q -t test1:1:1635507560823
-#CONSUME
-Consumer mode (writes messages to stdout):
--C 
--C -o beginning
--C -o end
--C -p 0
--C -p 1 -o 11514
--C -f 'Topic %t Partition [%p] at Offset %o: Timesestamp is: %T Payload size is %S  Key is %k   Message is: %s\n' 
+-Q -t k8s-logs-fluentbit:13:1878529329
 
 
 #FORMATS

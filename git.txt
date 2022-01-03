@@ -46,7 +46,11 @@ Pull down a repo
 
 now you got all the files
 you can change the files copy them back by doing the following
+<<<<<<< HEAD
+	git remote add origin git@github.com:MikeVaccaro/NOTES.git
+=======
 	git remote add origin git@github.com:MikeVaccaro/newone.git
+>>>>>>> b561cd50d050955428f829fd6fce8e5846a87f9a
 	git add .
 	git commit
 	git push origin master 
