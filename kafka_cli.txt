@@ -49,3 +49,28 @@ kafka-configs --zookeeper $KZK:2181  --alter --add-config 'SCRAM-SHA-256=[iterat
 }
 
 
+
+
+
+
+
+
+
+
+
+
+$KCG --dry-run --group consumer-group --topic topic-name --reset-offsets --to-earliest
+$KCG --execute --group consumer-group --topic topic-name --reset-offsets --to-earliest
+Can reset offsets by/to:
+    --shift-by <positive or negative integer>
+     --to-current
+    --to-latest
+    --to-offset <offset_num>
+    --to-datetime <datetime_string>
+
+--to-datetime note: time zone is assumed to be UTC if it's not mentioned in the datetime_string
+also can do on a particlar partition
+--topic someTopicName:0
+Here's an example of reset by time but notice the 05:00 we manually went back by five hours becasue we were told a time in CST but the data is stored in UST so we manually adjusted
+    RFCTSK73767: $KCG --dry-run --group online-orderssearch-consumer-v2 --topic online-orders --reset-offsets --to-datetime 2021-02-28T05:00:00.000Z
+
