@@ -1,3 +1,9 @@
+# SCHEMA REG
+curl -X PUT -H "Content-Type: application/vnd.schemaregistry.v1+json" --data '{"compatibility": "NONE"}'  http://kafkadvschemacl01.chrobinson.com:8081/config/${val}
+
+
+
+
 get broker names
 	kafka-broker-api-versions --bootstrap-server $KBK|grep id
 		lin2dv2kf1b8.chrobinson.com:9092 (id: 1001 rack: 2) -> (
