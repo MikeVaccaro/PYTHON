@@ -1,4 +1,4 @@
-
+git checkout -- filename 	#disgaurd your uncommitted changes and git the local copy that has been most previously coommited
 git log --oneline --graph --decorate --color       ###show the logs
 
 
