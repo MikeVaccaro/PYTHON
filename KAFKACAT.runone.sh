@@ -3,7 +3,6 @@
 #CONSUME GET ALL FIELDS
 USERNAME=admin
 PASSWORD=abl;kajsdf
-PASSWORD=ThisIsTheWay
 #above is is for kafkacadmin opprd
 SECCLAUSE="-X security.protocol=SASL_PLAINTEXT -X sasl.mechanisms=SCRAM-SHA-256 -X sasl.username=$USERNAME -X sasl.password=$PASSWORD"
 RUNCOMMAND="sudo docker run -it --rm edenhill/kafkacat:1.6.0 -b $KBK"

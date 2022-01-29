@@ -1,32 +1,22 @@
 
-(still had to create repo from github.com)
---not sure about this' git remote add origin git@github.com:MikeVaccaro/newone.git
-git branch -M master
-git push -u origin master
+git log --oneline --graph --decorate --color       ###show the logs
 
 
+which git 		 	###Check if git is installed
+sudo apt update 		###install git
+sudo apt install git  		###install git
 
-Check if git is installed
-	which git
-Install git
-	sudo apt update
-	sudo apt install git
-Create user config for git
+####Create user config for git
 	git config --global user.name "First Last"
 	git config --global user.name "Mikee Vaccaro"
 	git config --global user.email "somebody@somewhere.net"
 	git config --global user.email "michael.r.vaccaro@gmail.com"
-Check the status of your git repository
-	git status
-Stage the README.md file (after making changes) to be included in the next git commit
-	git add README.md
-Set up the README.md file to be included in a commit
-	git commit -m "Updated readme file, initial commit"
-Send the commit to Github
-	git push origin master
-which remote repository is affiliated with the local one?
-	git remote -v
 
+git status 	 		###Check the status of your git repository
+git add READ.md		  	###Stage the README.md file (after making changes) to be included in the next git commit
+git commit -m "updated readme file, inital commit"  		 ###Set up the README.md file to be included in a commit
+git push origin master		###Send the commit to Github
+git remote -v 			###which remote repository is affiliated with the local one?
 
 Initital Setup
 	go to home dir and create .ssh
@@ -44,11 +34,10 @@ Pull down a repo
 	git init (inside that directory)
 	git pull git@github.com:MikeVaccaro/NOTES.git
 
-After you come back to a tracked repo start off but doing this AGAIN to make sure you are all up to date from the hub
-	git pull git@github.com:MikeVaccaro/NOTES.git
+git pull git@github.com:MikeVaccaro/NOTES.git    ##### After you come back to a tracked repo start off but doing this AGAIN to make sure you are all up to date from the hub
 
 
-now you got all the files
+###now you got all the files
 you can change the files copy them back by doing the following
 <<<<<<< HEAD
 	git remote add origin git@github.com:MikeVaccaro/NOTES.git
@@ -59,3 +48,13 @@ you can change the files copy them back by doing the following
 	git commit
 	git push origin master 
 
+
+
+git reset HEAD filename 	#### "unastage a file from git's staging area#### 
+git checkout --filename 	### back out changes to a specified file and replade it with the version last committed in git
+
+
+(still had to create repo from github.com)
+--not sure about this' git remote add origin git@github.com:MikeVaccaro/newone.git
+git branch -M master
+git push -u origin master
