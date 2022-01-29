@@ -3,7 +3,7 @@
 USERNAME=ds-k8s-logging-user
 USERNAME=filebeat-k8s-ece
 USERNAME=admin
-USERNAME=kafkaadmin
+uuuuuuuuuuuUSERNAME=kafkaadmin
 PASSWORD=TArsy8XrhefW3WV8
 PASSWORD=asdlkfjeoijEE1234!
 PASSWORD="WBxE77qgk46P60(e9"  
