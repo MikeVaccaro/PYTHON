@@ -1,3 +1,27 @@
+##################### BEGIN Tuneing and Trouble shooting ###############
+20 tasks load per worker      ### maxium recommended (but we think can go higher if you monitor OS and have low activity)    # advice of consulting engagment and documention
+maximum tasks to configure for a connector is up to the  number of partitions on the topic.		#any more dont do anything!  #adivice of consulting engagement 
+only allow 150 paritions max per connector task 	### max recommended  advice of consulting engagment and documention	
+
+TUNE>>:
+a) increase partitions for greater throughput
+b)  ensure compression
+c) network settings
+	send.buffer.bytes
+	receive.buffer.bytes
+	socket.send.buffer.bytes
+
+You can do a thing called express encrypted authentication in the connector config
+##################### END  Tuneing and Trouble shooting ###############
+
+
+Message size increases can impact
+	JVM heap size
+	Garbage collection ramifications
+	replication settings
+		because the big messages is uncompressed when it enters the replicator, for example connector would need to recompress it to send it off
+	socket related settings ???
+
 ####################### Replicators ##############################################
 #
 # keeps headers from being converted to base64
