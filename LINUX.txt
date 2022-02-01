@@ -28,18 +28,10 @@ alias ssha='eval $(ssh-agent) && ssh-add':
 
 
 
-###Convert epoch
-date -d @1643233537155
-
+date -d @1643233537155        #convert epoch
 cat /etc/os-release
-
-
-
-#whos listening on what port
-netstat -tulpen
-
-#I think these indicate firewall ports open/close etc
-iptables -L
-iptables -L -n
+netstat -tulpen               #whos listening on what port
+iptables -L             #I think these indicate firewall ports open/close etc
+iptables -L -n	        #I think these indicate firewall ports open/close etc
 
 
