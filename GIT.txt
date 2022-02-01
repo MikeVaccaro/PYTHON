@@ -1,4 +1,4 @@
-git checkout -- filename 	#disgaurd your uncommitted changes and git the local copy that has been most previously coommited
+git checkout -- filename 	#dddisgaurd your uncommitted changes and git the local copy that has been most previously coommited
 git log --oneline --graph --decorate --color       ###show the logs
 git rm filename   #then commit then push will git rid of it properly
 
