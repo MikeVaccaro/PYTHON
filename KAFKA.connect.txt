@@ -1,0 +1,27 @@
+####################### Replicators ##############################################
+#
+# keeps headers from being converted to base64
+"header.converter": "io.confluent.connect.replicator.util.ByteArrayConverter",
+#
+#  if your TARGET topic has a larger max.message.size (larger messages allowed)
+#  THEN use the following, make the value match the max message size allowed on the TARGET TOPIC
+#
+#        "producer.override.max.request.size": "54242880"
+#
+##############################################
+#
+#  If your TARGET topic name needs to be different use this
+#
+#        "topic.rename.format": "${topic}-dev",
+#
+##############################################
+#
+#  If your TARGET partition count needs to be different use these both
+#  (both of these default to true)
+#
+#        "topic.preserve.partitions": "false",
+#        "offset.topic.commit": "false",
+#
+####################### Replicators ##############################################
+ 
+
