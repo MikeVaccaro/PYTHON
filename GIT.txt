@@ -1,4 +1,4 @@
-git remote -v   ## list the remote repos 
+git remote -v   ######### list the remote repos 
 git commit -am "Awesome commit message"    ## add directly commit with message
 git checkout -- filename 	#dddisgaurd your uncommitted changes and git the local copy that has been most previously coommited
 git log --oneline --graph --decorate --color       ###show the logs
