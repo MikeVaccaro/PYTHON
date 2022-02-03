@@ -1,11 +1,16 @@
-# SCHEMA REG
+################## BEGIN SCHEMA REG #######################
 curl -X PUT -H "Content-Type: application/vnd.schemaregistry.v1+json" --data '{"compatibility": "NONE"}'  $KSR/config/${val}
 
 curl $KSR/config/[subject]
+################## END SCHEMA REG ################################
 
-delete kafka user
- 1043  2022-01-21_14:40:09 kafka-configs --zookeeper $KZK  --alter   --entity-type users --entity-name book.offerrequest.consumer --delete-config "SCRAM-SHA-256"
- 1045  2022-01-21_14:40:35 kafka-configs --zookeeper $KZK  --alter   --entity-type users --entity-name book.offerrequest.consumer --delete-config "SCRAM-SHA-512"
+
+
+################## BEGIN KAFKA BROKER ############################
+kafka-configs --zookeeper $KZK  --alter   --entity-type users --entity-name book.offerrequest.consumer --delete-config "SCRAM-SHA-256"
+kafka-configs --zookeeper $KZK  --alter   --entity-type users --entity-name book.offerrequest.consumer --delete-config "SCRAM-SHA-512"
+
+
 
 
 
