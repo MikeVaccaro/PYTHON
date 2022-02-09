@@ -1,4 +1,14 @@
 
+##################### BEGIN- SHELL COMMANDS  ###########################
+grep  'provide\|count' sample.txt    #multiple strings
+grep -w 'provide\|count' sample.txt    # multiple exact word matches only
+curl -s 		# silent curl dont show progress bar
+
+
+
+
+
+##################### END- SHELL COMMANDS  #############################
 ##################### BEGIN- SSH ##########################
 ssh-keygen -t ed25519 -C "jay default"
 ssh-keygen -C "made for github.com from awx box"
