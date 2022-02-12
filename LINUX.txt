@@ -1,8 +1,17 @@
 
+
+
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+source $HOME/.cargo/env
+cargo install jless
+
+
+
 ##################### BEGIN- SHELL COMMANDS  ###########################
 grep  'provide\|count' sample.txt    #multiple strings
 grep -w 'provide\|count' sample.txt    # multiple exact word matches only
 curl -s 		# silent curl dont show progress bar
+sed -i 's/SEARCH_REGEX/REPLACEMENT/g' INPUTFILE    #replace items in a file
 
 
 
