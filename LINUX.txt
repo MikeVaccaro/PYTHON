@@ -2,6 +2,7 @@
 
 
 a
+b
 
 ##################### BEGIN- SHELL COMMANDS  ###########################
 grep  'provide\|count' sample.txt    #multiple strings
