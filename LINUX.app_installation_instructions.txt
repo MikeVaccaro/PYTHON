@@ -3,6 +3,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 source $HOME/.cargo/env
 cargo install jless
 ################ jless with rust
+
 ################ BEGIN CLI speedtest install centos/redhat/fedorah ###############
 ## If migrating from prior bintray install instructions please first...
 # sudo rm /etc/yum.repos.d/bintray-ookla-rhel.repo
