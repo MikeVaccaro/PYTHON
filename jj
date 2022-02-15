@@ -1,0 +1,2 @@
+{ "version":2, "replicas":[ { "count":2, "constraints":{ "rack":"centralus-a" } }, { "count":2, "constraints":{ "rack":"eastus2-a" } }               ], "observers":[ { "count":1, "constraints":{ "rack":"centralus-b" } }, { "count":1, "constraints":{ "rack":"eastus2-b" } }             ], "observerPromotionPolicy":"under-min-isr" }
+
