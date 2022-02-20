@@ -1,4 +1,4 @@
-
+jjjjj
 ##################### BEGIN- SHELL COMMANDS  ###########################
 grep  'provide\|count' sample.txt    #multiple strings
 grep -w 'provide\|count' sample.txt    # multiple exact word matches only
