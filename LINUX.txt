@@ -1,15 +1,29 @@
-jjjjj
+
+##################### BEGIN- JQ  ###########################
+https://mosermichael.github.io/jq-illustrated/dir-single-file/content.html
+
+##################### END- JQ  ###########################
+
+
 ##################### BEGIN- SHELL COMMANDS  ###########################
 grep  'provide\|count' sample.txt    #multiple strings
 grep -w 'provide\|count' sample.txt    # multiple exact word matches only
 curl -s 		# silent curl dont show progress bar
 sed -i 's/SEARCH_REGEX/REPLACEMENT/g' INPUTFILE    #replace items in a file
 
-
-
-
+ls -d $PWD/*
+date -d @1643233537155        #convert epoch
+cat /etc/os-release
+netstat -tulpen               #whos listening on what port
+iptables -L             #I think these indicate firewall ports open/close etc
+iptables -L -n	        #I think these indicate firewall ports open/close etc
 
 ##################### END- SHELL COMMANDS  #############################
+
+
+
+
+
 ##################### BEGIN- SSH ##########################
 ssh-keygen -t ed25519 -C "jay default"
 ssh-keygen -C "made for github.com from awx box"
@@ -30,6 +44,9 @@ eval $(ssh-agent)
 #Here's an alias you can put in your .bashrc, to simplify it
 alias ssha='eval $(ssh-agent) && ssh-add':
 ##################### END- SSH #################
+
+
+
 
 ##################### BEGIN- SHELL CONTROL FLOW ##########################
 loops
@@ -59,17 +76,16 @@ fi
 
 ##################### BEGIN- SHELL CONTROL FLOW ##########################
 
+
+
+
 ##################### END- AWK/GREP/SED ##########################
 #AWK
 echo $1,$2|awk -F"," '{printf ("kafka-acls blahblahblah  User:%s  --topic %s   \n",$1,$2)}'
 cat yy2 |awk '{printf("./CN.Alter %s tasks.max 1\n",$1)}'
 ##################### END- AWK/GREP/SED  ##########################
 
-ls -d $PWD/*
-date -d @1643233537155        #convert epoch
-cat /etc/os-release
-netstat -tulpen               #whos listening on what port
-iptables -L             #I think these indicate firewall ports open/close etc
-iptables -L -n	        #I think these indicate firewall ports open/close etc
+
+
 
 
