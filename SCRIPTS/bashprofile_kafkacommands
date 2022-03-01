@@ -1,0 +1,190 @@
+#!/bin/sh
+
+
+###### STANDARD COMMAND HELPERS ##################
+StandardFunction (){
+KT="$KBIN/kafka-topics --bootstrap-server $KBK --command-config $KFCCP"
+KTS="$KBIN/kafka-topics-secure --bootstrap-server $KBK "
+KTZ="$KBIN/kafka-topics-secure --zookeeper $KZK "
+#KACL="$KBIN/kafka-acls --bootstrap-server $KBK --command-config $KFCCP"
+KACL="$KBIN/kafka-acls --authorizer-properties zookeeper.connect=$KZK"
+KACLS="$KBIN/kafka-acls-secure --authorizer-properties zookeeper.connect=$KZK"
+KCC="$KBIN/kafka-console-consumer --bootstrap-server $KBK --consumer.config $KFCCP"
+KCP="$KBIN/kafka-console-producer --broker-list $KBK --producer.config $KFCCP"
+KACC="$KBIN/kafka-avro-console-consumer --bootstrap-server $KBK --property schema.registry.url=$KSR --consumer.config=$KFCCP"
+        #USAGE NOTES
+	#--property schema.id.separator='|'   --property print.schema.ids=true
+KACP="$KBIN/kafka-avro-console-producer --broker-list $KBK  --property schema.registry.url=$KSR --producer.config=$KFCCP"
+        #USAGE NOTES
+        # --property value.schema='{"type":"record","name":"myrecord","fields":[{"name":"f1","type":"string"}]}'
+        # `curl $KSR/schemas/ids/3680|jq -r .schema`
+        # --property value.schema='`curl $KSR/schemas/ids/3680|jq -r .schema`'
+
+KGO="kafka-run-class kafka.tools.GetOffsetShell --broker-list $KBK"
+KCG="kafka-consumer-groups --bootstrap-server $KBK --command-config=$KFCCP" 
+	# USAGE NOTES ##########################
+	# $KRPcurl/topics/mikev|jq -r .configs
+
+KBAV="$KBIN/kafka-broker-api-versions --bootstrap-server $KBK --command-config $KFCCP"
+KCFG="$KBIN/kafka-configs --zookeeper $KZK "
+}
+
+#KENV=CHDEV_TONGR
+#KENV=K8SDDSSANDBOX
+#KENV=EMLOG
+#KENV=AZ_TRN
+#KENV=OP_PRD
+#KENV=OP_INT
+#KENV=OP_TRN
+#KENV=AZ_PRD
+#KENV=OP_PRD2
+#KENV=OPCC_PRD
+#KENV=AZ_INT
+#KENV=OP_DEV
+#KENV=AZ_DEV
+#
+KENV=$1
+if [ $KENV = "EMLOG" ]; then
+	KBK=ebdc-emlog-broker1.chrobinson.com:9093
+        KZK=ebdc-emlog-zookeeper1.chrobinson.com:2181
+        KFCCP=/data/tools/kafka/clients/EMLOG__SASL_PLAINTEXT-9093__SASLMECHANISM-SH256__ds-k8s-logging-user.conf
+	KSR=
+	KPR=
+        KCON=http://kafka-prd-connect-workers.chrobinson.com
+        KBIN=/usr/bin
+	StandardFunction 
+fi
+
+if [ $KENV = "AZ_DEV" ]; then
+        KBK=rh01dv-broke005.centralus.chrazure.cloud:9092
+	KZK=rh01dv-kf1z1.centralus.chrazure.cloud:2181
+	KZK=rh01dv-zooke001.centralus.chrazure.cloud:2181
+	KFCCP=/data/tools/kafka/clients/AZ_DEV__SASL_PLAINTEXT-9092__SASLMECHANISM-SH256__acltest.conf
+	KFCCP=/data/tools/kafka/clients/AZ_DEV__SASL_PLAINTEXT-9092__SASLMECHANISM-SH256__admin.conf
+        #KBK=rh01dv-kf1b1.centralus.chrazure.cloud:9092
+	KRP=
+        KSR=https://schema-registry.dvcl01.kafka.centralus.chrazure.cloud:8081
+	KCON=https://kafka-connect1.dvcl01.kafka.centralus.chrazure.cloud:8083
+        KBIN=/usr/bin
+	StandardFunction 
+fi
+if [ $KENV = "AZ_INT" ]; then
+        KBK=rh01in-broke001.centralus.chrazure.cloud:9092
+	KZK=rh01in-zooke001.centralus.chrazure.cloud:2181
+        KFCCP=/data/tools/kafka/clients/AZ_INT__SASL_PLAINTEXT-9092__SASLMECHANISM-SH256__admin.conf
+	KRP=
+        KSR=https://rh01in-schem001.centralus.chrazure.cloud:8081
+	KCON=https://kafka-connect1.incl01.kafka.centralus.chrazure.cloud:8083
+        KBIN=/usr/bin
+	StandardFunction 
+fi
+if [ $KENV = "AZ_TRN" ]; then
+        KBK=rh01tr-broke001.centralus.chrazure.cloud:9092
+	KZK=rh01tr-zooke001.centralus.chrazure.cloud:2181
+        KFCCP=/data/tools/kafka/clients/AZ_TRN__SASL_PLAINTEXT-9092__SASLMECHANISM-SH256__admin.conf
+	KRP=
+        KSR=https://rh01tr-schem001.centralus.chrazure.cloud:8081
+	KSR=https://schema-registry01.trcl01.kafka.centralus.chrazure.cloud:8081
+	KCON=https://kafka-connect1.trcl01.kafka.centralus.chrazure.cloud:8083
+        KBIN=/usr/bin
+	StandardFunction 
+fi
+if [ $KENV = "AZ_PRD" ]; then
+        KBK=rh01pr-kf1b1.centralus.chrazure.cloud:9092
+        KBK=rh01pr-broke001.centralus.chrazure.cloud:9092
+	KZK=rh01pr-kf1z1.centralus.chrazure.cloud:2181
+	KFCCP=/data/tools/kafka/clients/AZ_PROD__SASL_PLAINTEXT-9092__SASLMECHANISM-SH256__admin.conf
+	KRP=
+	#KSR=https://rh01pr-kf1s1.centralus.chrazure.cloud:8081
+        KSR=https://schema-registry.prcl01.kafka.centralus.chrazure.cloud:8081
+	KCON=https://kafka-connect1.prcl01.kafka.centralus.chrazure.cloud:8083
+        KBIN=/usr/bin
+	StandardFunction 
+
+fi
+if [ $KENV = "OP_DEV" ]; then
+        KBK=kafkadvcl01b1.chrobinson.com:9093
+        KZK=kafkadvzk1.chrobinson.com:2181/kafkadev/01
+        KFCCP=/data/tools/kafka/clients/OP_DEV__SASL_PLAINTEXT-9093__SASLMECHANISM-SH256__kafkaadmin.conf
+        KRP=kafkadvrestcl01.chrobinson.com:8082
+        KSR=http://kafkadvschemacl01.chrobinson.com:8081
+	KCON=http://kafka-connect-dev.dc2.np.dds.chr8s.io
+        KBIN=/usr/bin
+	StandardFunction 
+	KACL=$KACLS
+fi
+if [ $KENV = "OP_INT" ]; then
+        KBK=kafkaincl01b1.chrobinson.com:9093
+        KZK=kafkainzk1.chrobinson.com:2181/kafkaint/01
+        KFCCP=/data/tools/kafka/clients/OP_INT__SASL_PLAINTEXT-9093__SASLMECHANISM-SH256__kafkaadmin.conf
+        KRP=kafkainrestcl01.chrobinson.com:8082
+        KSR=http://kafkainschemacl01.chrobinson.com:8081
+        KCON=http://kafka-connect-int.dc2.np.dds.chr8s.io
+        KBIN=/usr/bin
+	StandardFunction 
+	KACL=$KACLS
+fi
+if [ $KENV = "OP_TRN" ]; then
+        KBK=kafkatrcl01b1.chrobinson.com:9093
+        KZK=kafkatrzk1.chrobinson.com:2181/kafkatraining/01
+        KFCCP=/data/tools/kafka/clients/OP_TRN__SASL_PLAINTEXT-9093__SASLMECHANISM-SH256__kafkaadmin.conf
+        KRP=kafkatrrestcl01.chrobinson.com:8082
+        KSR=http://kafkatrschemacl01.chrobinson.com:8081
+	KCON=http://kafka-connect-trn.dc2.prd.dds.chr8s.io  
+        #KCON=http://kafka-trn-connect-workers.chrobinson.com AKA
+        KBIN=/usr/bin
+	StandardFunction 
+	KACL=$KACLS
+fi
+if [ $KENV = "OP_PRD" ]; then
+        KBK=kafkaprcl01b1.chrobinson.com:9093
+        #KBK=lin2pr1kf5b2.chrobinson.com:9092
+        KZK=kafkaprzk1.chrobinson.com:2181/kafkaprod/01
+	KFCCP=/data/tools/kafka/clients/OP_PRD__SASL_PLAINTEXT-9093__SASLMECHANISM-SH256__kafkaadmin.conf
+        KRP=kafkaprrestcl01.chrobinson.com:8082
+        KSR=http://kafkaprschemacl01.chrobinson.com:8081
+	KCON=http://kafka-connect-prd.dc2.prd.dds.chr8s.io
+        #KCON=http://kafka-prd-connect-workers.chrobinson.com AKA
+        KBIN=/usr/bin
+	StandardFunction 
+	KACL=$KACLS
+fi
+
+if [ $KENV = "K8SDDSSANDBOX" ]; then
+		KBK=kafka-broker-ddssandbox.dc2.np.dds.chr8s.io:9092
+		KZK=kafka-zookeeper-ddssandbox.dc2.np.dds.chr8s.io:2181
+		KCON=kafka-connect-ddssandbox.dc2.np.dds.chr8s.io:8083
+		KT="$KBIN/kafka-topics --bootstrap-server $KBK "
+		KT="$KBIN/kafka-topics-secure --bootstrap-server $KBK "
+		KCC="$KBIN/kafka-console-consumer --bootstrap-server $KBK "
+		KCP="$KBIN/kafka-console-producer --broker-list $KBK "
+		KACC="$KBIN/kafka-avro-console-consumer --bootstrap-server $KBK --property schema.registry.url=$KSR "
+		KACP="$KBIN/kafka-avro-console-producer --broker-list $KBK  --property schema.registry.url=$KSR "
+fi
+if [ $KENV = "OPCC_PRD" ]; then
+        KBK=lin2pr2kf2b1.chrobinson.com:9092
+        KZK=kafkaprzk1.chrobinson.com:2181,kafkaprzk2.chrobinson.com:2181,kafkaprzk3.chrobinson.com:2181/kafkaprd/01
+        KZK=kafkaprzk1.chrobinson.com:2181/kafkaprod/01
+
+        KRP=kafkaprrestcl01.chrobinson.com:8082
+        KSR=http://kafkaprschemacl01.chrobinson.com:8081
+		#boxname version would be KSR=lin2in2kf1r1.chrobinson.com:8081
+        KCON=http://kafka-prd-connect-workers.chrobinson.com
+        KFCCP=/data/tools/kafka/clients/console-consumer.properties.EMPTYFILE_DONOTREMOVE
+	#OVERRIDES -->
+		#KCC="$KBIN/kafka-console-consumer --bootstrap-server $KBK "
+		#KCP="$KBIN/kafka-console-producer --broker-list $KBK "
+		#KACC="$KBIN/kafka-avro-console-consumer --bootstrap-server $KBK --property schema.registry.url=$KSR "
+		#KACP="$KBIN/kafka-avro-console-producer --broker-list $KBK  --property schema.registry.url=$KSR "
+	 	KACL="$KBIN/kafka-acls-secure --authorizer-properties zookeeper.connect=$KZK"
+fi
+
+
+
+
+
+
+PS1="\h:\u:KENV->"`echo $KENV`">"
+
+
+alias SHOWK="echo;set|grep '^K'|sort;echo;echo 'KENV is set to $KENV';echo 'KBIN is set to $KBIN';echo"
