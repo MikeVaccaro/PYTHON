@@ -1,0 +1,274 @@
+
+iptables -I OUTPUT 1 ! -d 192.168.1.0/24 -j DROP
+iptables -A OUTPUT  -d 192.168.1.0/24 -j DROP
+
+######################################
+########################### CP SETUP
+######################################
+
+	#download thi confluent-7.0.1.tar start one zk and one bk
+
+	##get the v2.6.1 "unified" confluent CLI it will wind up in /root/.local/bin
+curl -L --http1.1 https://cnfl.io/ccloud-cli | sh -s -- -b ~/.local/bin    
+
+
+	#put unified CLI in your path with precidene over the 7.0.1 stuff
+export PATH=~/.local/bin:$PATH;    
+
+
+	#put this in your bashrc 
+export CONFLUENT_HOME=<CP installation directory>
+export CONFLUENT_CONFIG=$CONFLUENT_HOME/etc/kafka
+
+	#fix zookeeper.properites
+listener.name.sasl_plaintext.scram-sha-512.sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username="kafka" password="kafka-secret";
+	#start zookeeper
+zookeeper-server-start $CONFLUENT_CONFIG/zookeeper-clusterlinking.properties
+
+
+	#create users (kafka and admin)
+
+kafka-configs --zookeeper localhost:2181 --alter --add-config 'SCRAM-SHA-512=[iterations=8192,password=kafka-secret]' --entity-type users --entity-name kafka 
+kafka-configs --zookeeper localhost:2181 --alter --add-config   'SCRAM-SHA-512=[iterations=8192,password=admin-secret]'   --entity-type users --entity-name admin
+
+
+	#create the $CONFLUENT_CONFIG/CP-command.config
+sasl.mechanism=SCRAM-SHA-kafka-server-start $CONFLUENT_CONFIG/server-clusterlinking.properties512
+security.protocol=SASL_PLAINTEXT
+sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required   username="admin"   password="admin-secret";
+
+	#fix broker properties
+confluent.cluster.link.enable=true
+
+	#now you can start server (broker)
+kafka-server-start $CONFLUENT_CONFIG/server-clusterlinking.properties
+
+	#get the cluster id
+kafka-cluster cluster-id --bootstrap-server localhost:9092 --config $CONFLUENT_CONFIG/CP-command.config
+
+	#set it to variable for convienence
+export CP_CLUSTER_ID=<CP-CLUSTER-ID>
+	#currently it is :
+export CP_CLUSTER_ID=Rq_LnrsXRTOcccjECx401$
+
+
+
+######################################
+############## CLOUD SETUP  
+######################################
+
+
+	#go online and create a CC cluster to use
+www.confluent.cloud  #go online and create a CC cluster to use
+	#follow this
+https://docs.confluent.io/cloud/current/get-started/index.html     
+	# or do it from the command line see below after the logi	
+
+	#log into confluent cloud
+confluent login
+	#NHCL Had to use this:
+confluent login --no-browser
+
+confluent environment list
+	confluent environment use (envid of the correct environment)
+	#currently it is this
+confluent environment use env-k3zng
+ 
+	#make a kafka cluster from command line if you havent done it from the web
+confluent kafka cluster create CLOUD-DEMO --type dedicated --cloud aws --region us-east-1 --cku 1 --availability single-zone
+
+confluent kafka cluster list
+confluent kafka cluster use lkc-12r035
+export CC_CLUSTER_ID=lkc-12r035
+
+
+####################################
+################ Populate CP cluster topic from-on-prem and topic-a
+#####################################
+
+kafka-topics --create --topic from-on-prem --partitions 1 --replication-factor 1 --bootstrap-server localhost:9092 --command-config $CONFLUENT_CONFIG/CP-command.config
+kafka-topics --create --topic topic-a --partitions 1 --replication-factor 1 --bootstrap-server localhost:9092 --command-config $CONFLUENT_CONFIG/CP-command.config
+
+
+kafka-topics --list --bootstrap-server localhost:9092 --command-config $CONFLUENT_CONFIG/CP-command.config
+
+
+seq 1 5 | kafka-console-producer --topic from-on-prem --bootstrap-server localhost:9092 --producer.config $CONFLUENT_CONFIG/CP-command.config
+
+kafka-console-consumer --topic from-on-prem --bootstrap-server localhost:9092 --consumer.config $CONFLUENT_CONFIG/CP-command.config --from-beginning
+kafka-console-consumer --topic topic-a --bootstrap-server localhost:9092 --consumer.config $CONFLUENT_CONFIG/CP-command.config --from-beginning
+
+
+
+##########################################
+################ Setup API key for access to CC
+##########################################
+
+	#before we get started lets create an API key
+confluent api-key create --resource $CC_CLUSTER_ID
+
+	#save it to file!
+	#it is currently this
+	+---------+------------------------------------------------------------------+
+	| API Key | BN5NKSRQU6NOQQIL                                                 |
+	| Secret  | Q/zeVkAo+fTdKa83RyuhcuGSrjmMW3GEZ251u+ZqTs41WzyHfY92bw3mooobS+Uu |
+	+---------+------------------------------------------------------------------+
+	#but no I think Im using a previous one
+	'WK4RQKLOJJZQZGRL' password='ADO/dHaoc4yhEOaZTNB02JE0Bx9KMso0Nil6Me4k6CdGdW2moRZ76rKjniiOjxnV';
+
+
+###########################################3yy
+################ Setup the 2 part source initated link
+##########################################
+
+	#here we set up the CP to CC link
+	#and the also also  CC to CP link
+	#These are the two halves of a  "source initiated link"
+
+
+	#Here we set up the CC half, the "destination half" of the link first a config file
+	#first its config
+cat <<EOF > $CONFLUENT_CONFIG/clusterlink-hybrid-dst.config
+link.mode=DESTINATION
+connection.mode=INBOUND
+EOF
+	#now the link itself
+
+confluent kafka link create from-on-prem-link --cluster $CC_CLUSTER_ID \
+  --source-cluster-id $CP_CLUSTER_ID \
+  --config-file $CONFLUENT_CONFIG/clusterlink-hybrid-dst.config \
+  --source-bootstrap-server 0.0.0.0
+
+confluent kafka link list --cluster $CC_CLUSTER_ID
+confluent kafka link desrcibe from-on-prem-link --cluster $CC_CLUSTER_ID
+
+###########################################
+
+	#creds for the cluster link on CP 
+kafka-configs --bootstrap-server localhost:9092 --alter --add-config \
+  'SCRAM-SHA-512=[iterations=8192,password=1LINK2RUL3TH3MALL]' \
+  --entity-type users --entity-name cp-to-cloud-link \
+  --command-config $CONFLUENT_CONFIG/CP-command.config
+
+
+	#now for the other config file for the other half of the link which is on CP
+	#lets create a config file
+
+cat <<EOF > $CONFLUENT_CONFIG/clusterlink-CP-src.config 
+link.mode=SOURCE
+connection.mode=OUTBOUND
+
+bootstrap.servers=<CC-BOOTSTRAP-SERVER>
+ssl.endpoint.identification.algorithm=https
+security.protocol=SASL_SSL
+sasl.mechanism=PLAIN
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username='<CC-link-api-key>' password='<CC-link-api-secret>';
+
+local.listener.name=SASL_PLAINTEXT
+local.security.protocol=SASL_PLAINTEXT
+local.sasl.mechanism=SCRAM-SHA-512
+local.sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username="cp-to-cloud-link" password="1LINK2RUL3TH3MALL";
+EOF
+
+
+	#NOW REPLACE THE PLACEHOLDERS IN THE ABOVE FILE ...apikey etc.
+	#run below to find out bootstrapserver on cloud
+
+confluent kafka cluster describe $CC_CLUSTER_ID
+	#Remove the SASL_SSL:// before you use it
+
+	#NOW you can create the source cluster link
+kafka-cluster-links --bootstrap-server localhost:9092 \
+     --create --link from-on-prem-link \
+     --config-file $CONFLUENT_CONFIG/clusterlink-CP-src.config \
+     --cluster-id $CC_CLUSTER_ID --command-config $CONFLUENT_CONFIG/CP-command.config
+
+kafka-cluster-links --bootstrap-server localhost:9092   --list    --command-config $CONFLUENT_CONFIG/CP-command.config
+
+###############################################################
+############## setup mirror for the source initiated link on topic from-on-prem, link from-on-prem-link
+###############################################################
+
+confluent kafka mirror create from-on-prem --link from-on-prem-link
+confluent kafka mirror create topic-a  --link from-on-prem-link
+confluent kafka mirror list --cluster $CC_CLUSTER_ID
+
+	#lets test it
+kafka-console-producer --topic from-on-prem --bootstrap-server localhost:9092 --producer.config $CONFLUENT_CONFIG/CP-command.config
+
+kafka-console-consumer --topic from-on-prem --bootstrap-server localhost:9092 --consumer.config $CONFLUENT_CONFIG/CP-command.config --from-beginning
+
+	#consume mirrored topic on CC
+confluent kafka topic consume from-on-prem --from-beginning
+confluent kafka topic consume topic-a --from-beginning
+
+###############################################################
+##############create topics and set up mirror data use the FROM-CLOUD-LINK
+###############################################################
+
+
+confluent kafka topic create cloud-topic --partitions 1
+confluent kafka topic create topic-b --partitions 1
+	#you might have to set the api key in order to produce
+confluent api-key use BN5NKSRQU6NOQQIL --resource lkc-12r035
+
+#create the SECOND  cluster link the one from CC this is NOT a source initated link so just comes in 1 part not 2 parts
+kafka-cluster-links --bootstrap-server localhost:9092 \
+      --create --link from-cloud-link \
+      --config-file $CONFLUENT_CONFIG/clusterlink-cloud-to-CP.config \
+      --cluster-id $CC_CLUSTER_ID --command-config $CONFLUENT_CONFIG/CP-command.config
+
+	#start the mirror FROM THE CP_CLUSTER
+kafka-mirrors --create --mirror-topic cloud-topic -link from-cloud-link --bootstrap-server localhost:9092 --command-config $CONFLUENT_CONFIG/CP-command.config
+kafka-mirrors --create --mirror-topic topic-b -link from-cloud-link --bootstrap-server localhost:9092 --command-config $CONFLUENT_CONFIG/CP-command.config
+
+	#lets test the downstream mirror 
+confluent kafka topic produce cloud-topic --cluster $CC_CLUSTER_ID
+
+kafka-console-consumer --topic cloud-topic --bootstrap-server localhost:9092 --consumer.config $CONFLUENT_CONFIG/CP-command.config --from-beginning
+
+
+
+###############################################################
+############## ksql 
+###############################################################
+# Create a stream from existing topic (from-ship or topic-a)
+
+CREATE STREAM TOPICA (
+ "group" STRING,
+  id INTEGER,
+  "size" INTEGER,
+  body STRING )
+WITH (
+  KAFKA_TOPIC='topic-a', VALUE_FORMAT='JSON'
+  );
+
+
+# Sanity check to ensure records are in the stream
+
+SELECT * FROM TOPICA EMIT CHANGES;
+
+
+# assuming new topic (from-shore or topic-b) already exists and has no data in it
+# create a stream for this new topic
+
+CREATE STREAM TOPICB (
+ "group" STRING,
+  id INTEGER,
+  "size" INTEGER,
+  body STRING )
+WITH (
+  KAFKA_TOPIC='topic-b', VALUE_FORMAT='JSON'
+  );
+
+
+# create a query that will take all events from one stream and forward them to another
+INSERT INTO TOPICB
+SELECT * FROM TOPICA
+EMIT CHANGES;
+
+
+# Sanity check to ensure that events are being forwarded
+SELECT * FROM TOPICB EMIT CHANGES;
+
+
