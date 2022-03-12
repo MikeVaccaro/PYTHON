@@ -1,6 +1,7 @@
 #!/bin/sh
 
 
+
 ###### STANDARD COMMAND HELPERS ##################
 StandardFunction (){
 KT="$KBIN/kafka-topics --bootstrap-server $KBK --command-config $KFCCP"
