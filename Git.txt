@@ -19,6 +19,7 @@ git status 	 		###Check the status of your git repository
 git add READ.md		  	###Stage the README.md file (after making changes) to be included in the next git commit
 git commit -m "updated readme file, inital commit"  		 ###Set up the README.md file to be included in a commit
 git push origin master		###Send the commit to Github
+git push git@github.com:MikeVaccaro/NOTES.git
 git remote -v 			###which remote repository is affiliated with the local one?
 
 Initital Setup
