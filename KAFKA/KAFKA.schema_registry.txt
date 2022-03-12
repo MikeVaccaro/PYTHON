@@ -1,0 +1,3 @@
+curl -X PUT -H "Content-Type: application/vnd.schemaregistry.v1+json" --data '{"compatibility": "NONE"}'  http://kafkainschemacl01.chrobinson.com:8081/config/online-legacy-online-user-migration-value
+curl -X GET   http://kafkainschemacl01.chrobinson.com:8081/config/online-legacy-online-user-migration-value
+

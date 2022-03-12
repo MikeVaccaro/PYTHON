@@ -1,0 +1,6 @@
+Message size increases can impact
+        JVM heap size
+        Garbage collection ramifications
+        replication settings
+                because the big messages is uncompressed when it enters the replicator, for example connector would need to recompress it to send it off
+        socket related settings ???
