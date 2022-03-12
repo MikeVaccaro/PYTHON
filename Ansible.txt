@@ -1,0 +1,27 @@
+
+
+
+ansible -i hosts all -m ping
+ansible -i hosts all -m copy -a "src=/root/bsfile dest=/tmp/BBBSfile"
+ansible -i hosts kzk -u root  -a "ls -l /tmp/ansible_was_here"
+
+#below required eplrelease so I logged on each box and did this -> sudo yum install epel-release
+ansible -i hosts all -m yum -a 'name=ncdu state=present'
+ansible -i hosts all -m yum -a 'name=ncdu state=absent'
+ansible all -m gather_facts
+ansible all --list-hosts
+ansible all -m gather_facts --limit es1
+ansible all --key-file ~/.ssh/ansible -i inventory -m ping
+
+#examples with becom sudo (but we dont use apt)
+ansible all -m apt -a update_cache=true --become --ask-become-pass   #Tell ansible to use sudo (become) 
+ansible all -m apt -a name=vim-nox --become --ask-become-pass    #Install a package via the apt module
+ansible all -m apt -a "name=snapd state=latest" --become --ask-become-pass    #Install a package via the apt module, and also make sure it's the latest version available
+ansible all -m apt -a upgrade=dist --become --ask-become-passxx    #Upgrade all the package updates that are available
+ansible -i hosts kzk   -a "uptime" -u root    #do this as the root user on the conctrol node, this box where ansible is being run from.
+
+
+
+ ansible-playbook --ask-become-pass install_apache.yml
+
+
