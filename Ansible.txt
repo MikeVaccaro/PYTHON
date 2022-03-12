@@ -1,6 +1,6 @@
 
 
-
+ jj
 ansible -i hosts all -m ping
 ansible -i hosts all -m copy -a "src=/root/bsfile dest=/tmp/BBBSfile"
 ansible -i hosts kzk -u root  -a "ls -l /tmp/ansible_was_here"
